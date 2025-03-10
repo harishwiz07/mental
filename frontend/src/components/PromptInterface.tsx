@@ -1,25 +1,53 @@
-import React, { useState } from 'react';
-import { Send, Loader2 } from 'lucide-react';
+import React, { useState } from "react";
+import { Send, Loader2 } from "lucide-react";
+
+const BACKEND_URL = "http://localhost:3000";
 
 export default function PromptInterface() {
-  const [prompt, setPrompt] = useState('');
-  const [response, setResponse] = useState('');
+  const [prompt, setPrompt] = useState("");
+  const [response, setResponse] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async () => {
     if (!prompt.trim()) return;
 
+    setResponse("");
     setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      setResponse("Based on your input, here's my analysis: It seems like you're experiencing some challenges. Remember that it's completely normal to have these feelings, and seeking support is a positive step. I'd recommend focusing on small, manageable goals and practicing self-compassion. Would you like to explore some specific coping strategies?");
+
+    try {
+      const res = await fetch(`${BACKEND_URL}/ai/mentalhealth`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: prompt }),
+      });
+
+      if (!res.body) throw new Error("No response body received");
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+
+      setResponse("");
+
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+
+        setResponse((prev) => prev + chunk); // Update response with received chunk
+      }
+    } catch (error) {
+      console.error("Streaming error:", error);
+      setResponse("Oops! Something went wrong. Please try again.");
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   return (
     <div className="max-w-4xl mx-auto p-6">
       <div className="grid gap-6">
+        
         {/* Prompt Input Section */}
         <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
           <h2 className="text-xl font-semibold text-white mb-4">Your Prompt</h2>
