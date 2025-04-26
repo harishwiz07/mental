@@ -5,14 +5,15 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios'
   const BACKEND_URL = "http://localhost:3000";
 
-  
+
+
 export function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = async (e:any) => {
-    e.preventDefault(); // Prevent page reload
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
 
     try {
       const response = await axios.post(`${BACKEND_URL}/auth/login`, {
@@ -20,13 +21,18 @@ export function Login() {
         password,
       });
 
-      if (response.status === 201) {
+      if (response.status === 200) {
+        const { token }:any = response.data;
+
+        // 🛑 Save token in localStorage
+        localStorage.setItem("token", token);
+
         toast.success("Login Successful!");
         navigate("/"); 
       }
-    } catch (error:any) {
+    } catch (error: any) {
       console.error("Login failed", error);
-      toast.error(error.response?.data?.message || "Invalid credentials");
+      toast.error(error.response?.data?.error || "Invalid credentials");
     }
   };
 
@@ -89,7 +95,8 @@ export function Login() {
       </div>
     </div>
   );
-}  
+}
+
 
 export function Signup() {
   const [userName, setUserName] = useState("");

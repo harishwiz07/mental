@@ -22,17 +22,10 @@ function App() {
           
           
           <Route path="/prompt" element={<PromptInterface />} />
-        </Routes>       <ToastContainer />
+        </Routes>
+        <ToastContainer />
 
-        {/* Floating button to toggle Prompt Interface */}
-        <button
-          onClick={() => {
-            setShowPrompt(!showPrompt);
-          }}
-          className="fixed bottom-8 right-8 bg-purple-600 text-white px-6 py-3 rounded-full shadow-lg hover:bg-purple-700 transition-colors"
-        >
-          {showPrompt ? "Back to Home" : "Start Prompt"}
-        </button>
+       
 
         {/* Conditional rendering for PromptInterface */}
         {showPrompt && (
