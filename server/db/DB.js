@@ -4,11 +4,7 @@ import mongoose from "mongoose";
 export const connectDB = async () => {
   try {
     await mongoose.connect(
-      "mongodb+srv://harishp400292:PsZYFs82bupVaQRe@cluster0.j9p0z.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
-      {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      }
+      "mongodb+srv://h100xdevs_db_user:vFUsgN6HARB9UVYQ@cluster0.tnrl11t.mongodb.net/?appName=Cluster0"
     );
     console.log("MongoDB Connected");
   } catch (error) {
